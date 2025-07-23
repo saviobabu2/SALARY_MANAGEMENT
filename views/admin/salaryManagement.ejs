@@ -1,0 +1,110 @@
+<body>
+    <div class="wrapper">
+        <!-- Main Content Area -->
+        <div class="content">
+            <header class="admin-header">
+                Salary Management
+            </header>
+
+            <main>
+                <section class="salary-list-section">
+                    <h2>All Salary Transactions</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Employee Name</th>
+                                    <th>Total Hours</th>
+                                    <th>Total Payment</th>
+                                    <th>Advance</th>
+                                    <th>Rent Deduction</th>
+                                    <th>Other Deductions</th>
+                                    <th>Additional Payments</th>
+                                    <th>Total Given</th>
+                                    <th>Details</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (salaryTransactions && salaryTransactions.length > 0) { %>
+                                    <% salaryTransactions.forEach(function(transaction) { %>
+                                        <tr>
+                                            <td><%= new Date(transaction.date).toLocaleDateString() %></td>
+                                            <td><%= transaction.name || 'N/A' %></td>
+                                            <td><%= transaction.totalHours ? transaction.totalHours.toFixed(2) : '0.00' %></td>
+                                            <td>INR <%= transaction.totalPayment ? transaction.totalPayment.toFixed(2) : '0.00' %></td>
+                                            <td>INR <%= transaction.advance ? transaction.advance.toFixed(2) : '0.00' %></td>
+                                            <td>INR <%= transaction.rentDeduction ? transaction.rentDeduction.toFixed(2) : '0.00' %></td>
+                                            <td>
+                                                <% if (transaction.otherDeductions && transaction.otherDeductions.length > 0) { %>
+                                                    <ul>
+                                                        <% transaction.otherDeductions.forEach(function(deduction) { %>
+                                                            <li><%= deduction.type %>: INR <%= deduction.amount.toFixed(2) %></li>
+                                                        <% }); %>
+                                                    </ul>
+                                                <% } else { %>
+                                                    None
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <% if (transaction.additionalPayments && transaction.additionalPayments.length > 0) { %>
+                                                    <ul>
+                                                        <% transaction.additionalPayments.forEach(function(payment) { %>
+                                                            <li><%= payment.type %>: INR <%= payment.amount.toFixed(2) %></li>
+                                                        <% }); %>
+                                                    </ul>
+                                                <% } else { %>
+                                                    None
+                                                <% } %>
+                                            </td>
+                                            <td>INR <%= transaction.totalGiven ? transaction.totalGiven.toFixed(2) : '0.00' %></td>
+                                            <td><%= transaction.details %></td>
+                                            <td>
+                                                <button class="action-btn edit-btn" data-id="<%= transaction._id %>"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn delete-btn" data-id="<%= transaction._id %>"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="11" style="text-align: center; padding: 20px;">No salary transactions found.</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="add-salary-btn-container">
+                        <a href="/admin/accounts/add-debit?type=debit&category=Salary" class="add-salary-btn">
+                            <i class="fas fa-plus-circle"></i> Add Salary Transaction
+                        </a>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // JavaScript for edit/delete functionality would go here.
+            // For now, the buttons are placeholders.
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const transactionId = e.currentTarget.dataset.id;
+                    alert(`Edit transaction with ID: ${transactionId}`);
+                    // Implement actual edit logic here (e.g., redirect to an edit form)
+                });
+            });
+
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const transactionId = e.currentTarget.dataset.id;
+                    if (confirm(`Are you sure you want to delete transaction with ID: ${transactionId}?`)) {
+                        alert(`Deleting transaction with ID: ${transactionId}`);
+                        // Implement actual delete logic here (e.g., send AJAX request)
+                    }
+                });
+            });
+        });
+    </script>
+</body>

@@ -1,0 +1,213 @@
+
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <header class="admin-header">
+                Generate & View Payslips
+            </header>
+
+            <main>
+                <section class="payslip-section">
+                    <h2>Generate New Payslip</h2>
+                    <form id="generatePayslipForm" class="payslip-form">
+                        <div class="form-group">
+                            <label for="staffSelect">Select Staff Member:</label>
+                            <select id="staffSelect" name="staffId" required>
+                                <option value="">Select Staff</option>
+                                <% if (staffList && staffList.length > 0) { %>
+                                    <% staffList.forEach(function(staff) { %>
+                                        <option value="<%= staff._id %>" data-staff-name="<%= staff.name %>"><%= staff.name %> (<%= staff.position %>)</option>
+                                    <% }); %>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="monthYear">Month & Year:</label>
+                            <input type="month" id="monthYear" name="monthYear" required>
+                        </div>
+                        <button type="submit" class="submit-btn"><i class="fas fa-file-invoice-dollar"></i> Generate Payslip</button>
+                    </form>
+
+                    <div class="payslip-list-container">
+                        <h3>Generated Payslips</h3>
+                        <div class="table-container">
+                            <table class="payslip-table">
+                                <thead>
+                                    <tr>
+                                        <th>Staff Name</th>
+                                        <th>Month/Year</th>
+                                        <th>Total Hours</th>
+                                        <th>Total Payment</th>
+                                        <th>Total Given</th>
+                                        <th>Generation Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="payslip-table-body">
+                                    <% if (payslips && payslips.length > 0) { %>
+                                        <% payslips.forEach(function(payslip) { %>
+                                            <tr>
+                                                <td><%= payslip.staffName %></td>
+                                                <td><%= payslip.monthYear %></td>
+                                                <td><%= payslip.totalHours.toFixed(2) %></td>
+                                                <td>INR <%= payslip.totalPayment.toFixed(2) %></td>
+                                                <td>INR <%= payslip.totalGiven.toFixed(2) %></td>
+                                                <td><%= new Date(payslip.generationDate).toLocaleDateString() %></td>
+                                                <td>
+                                                    <button class="action-btn view-payslip-btn" data-id="<%= payslip._id %>"><i class="fas fa-eye"></i> View</button>
+                                                    <button class="action-btn delete-payslip-btn" data-id="<%= payslip._id %>"><i class="fas fa-trash-alt"></i> Delete</button>
+                                                </td>
+                                            </tr>
+                                        <% }); %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="7" class="no-payslips-message">No payslips generated yet.</td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Custom Modal for Alerts and Confirmations -->
+    <div id="customModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle"></h3>
+            <p id="modalMessage"></p>
+            <div class="modal-buttons">
+                <button id="modalOkBtn" class="modal-ok-btn" style="display: none;">OK</button>
+                <button id="modalConfirmBtn" class="modal-confirm-btn" style="display: none;">Confirm</button>
+                <button id="modalCancelBtn" class="modal-cancel-btn" style="display: none;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const generatePayslipForm = document.getElementById('generatePayslipForm');
+            const payslipTableBody = document.getElementById('payslip-table-body');
+
+            // Modal elements
+            const customModal = document.getElementById('customModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            const modalOkBtn = document.getElementById('modalOkBtn');
+            const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+            const modalCancelBtn = document.getElementById('modalCancelBtn');
+
+            // Function to show custom alert modal
+            function showAlert(title, message) {
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+                modalOkBtn.style.display = 'inline-block';
+                modalConfirmBtn.style.display = 'none';
+                modalCancelBtn.style.display = 'none';
+                customModal.style.display = 'flex';
+                return new Promise(resolve => {
+                    modalOkBtn.onclick = () => {
+                        customModal.style.display = 'none';
+                        resolve(true);
+                    };
+                });
+            }
+
+            // Function to show custom confirmation modal
+            function showConfirm(title, message) {
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+                modalOkBtn.style.display = 'none';
+                modalConfirmBtn.style.display = 'inline-block';
+                modalCancelBtn.style.display = 'inline-block';
+                customModal.style.display = 'flex';
+                return new Promise(resolve => {
+                    modalConfirmBtn.onclick = () => {
+                        customModal.style.display = 'none';
+                        resolve(true);
+                    };
+                    modalCancelBtn.onclick = () => {
+                        customModal.style.display = 'none';
+                        resolve(false);
+                    };
+                });
+            }
+
+            // Set default month/year to current month
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = (today.getMonth() + 1).toString().padStart(2, '0');
+            document.getElementById('monthYear').value = `${year}-${month}`;
+
+            generatePayslipForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const staffId = document.getElementById('staffSelect').value;
+                const staffName = document.getElementById('staffSelect').selectedOptions[0].dataset.staffName;
+                const monthYear = document.getElementById('monthYear').value;
+
+                if (!staffId || !monthYear) {
+                    await showAlert('Input Error', 'Please select a staff member and month/year.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/admin/api/generate-payslip', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ staffId, staffName, monthYear })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        await showAlert('Success', result.message);
+                        window.location.reload(); // Reload the page to show the new payslip in the list
+                    } else {
+                        await showAlert('Error', result.message);
+                    }
+                } catch (error) {
+                    console.error('Error generating payslip:', error);
+                    await showAlert('Error', 'An unexpected error occurred. Please try again.');
+                }
+            });
+
+            // Event listeners for View and Delete buttons (Payslip List)
+            payslipTableBody.addEventListener('click', async (e) => {
+                if (e.target.classList.contains('view-payslip-btn') || e.target.closest('.view-payslip-btn')) {
+                    const payslipId = e.target.closest('.view-payslip-btn').dataset.id;
+                    await showAlert('View Payslip', `Viewing payslip with ID: ${payslipId}. (Detailed view implementation needed)`);
+                    // In a real application, you would redirect to a detailed payslip view page:
+                    // window.location.href = `/admin/payslip/${payslipId}`;
+                } else if (e.target.classList.contains('delete-payslip-btn') || e.target.closest('.delete-payslip-btn')) {
+                    const payslipId = e.target.closest('.delete-payslip-btn').dataset.id;
+                    const confirmed = await showConfirm('Confirm Deletion', `Are you sure you want to delete payslip with ID: ${payslipId}? This action cannot be undone.`);
+
+                    if (confirmed) {
+                        try {
+                            const response = await fetch(`/admin/api/payslip/${payslipId}`, {
+                                method: 'DELETE'
+                            });
+                            const result = await response.json();
+                            if (result.success) {
+                                await showAlert('Success', result.message);
+                                window.location.reload(); // Reload to update the list
+                            } else {
+                                await showAlert('Error', result.message);
+                            }
+                        } catch (error) {
+                            console.error('Error deleting payslip:', error);
+                            await showAlert('Error', 'An unexpected error occurred during deletion.');
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+

@@ -1,0 +1,183 @@
+
+     
+
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Main Content Area -->
+        <div class="content">
+            <header class="admin-header">
+                Staff Management
+            </header>
+
+            <main>
+                <!-- Section to display registered staff -->
+                <section class="staff-list-section">
+                    <h2>Registered Staff Members</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Position</th>
+                                    <th>Date of Joining</th>
+                                    <th>Base Salary</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (staffList && staffList.length > 0) { %>
+                                    <% staffList.forEach(function(staff) { %>
+                                        <tr data-staff-id="<%= staff._id %>">
+                                            <td><%= staff.name %></td>
+                                            <td><%= staff.email %></td>
+                                            <td><%= staff.phone || 'N/A' %></td>
+                                            <td><%= staff.position || 'N/A' %></td>
+                                            <td><%= new Date(staff.dateOfJoining).toLocaleDateString() %></td>
+                                            <td>INR <%= staff.baseSalary.toFixed(2) %></td>
+                                            <td>
+                                                <button class="action-btn edit-btn" data-id="<%= staff._id %>"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn delete-btn" data-id="<%= staff._id %>"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="7" style="text-align: center; padding: 20px;">No staff members found.</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="add-staff-btn-container">
+                        <button class="submit-btn add-new-staff-btn"><i class="fas fa-plus-circle"></i> Add New Staff</button>
+                    </div>
+                </section>
+
+                <!-- Section for adding a new staff member (initially hidden) -->
+                <section class="add-staff-section" style="display: none;">
+                    <h2>Add New Staff Member</h2>
+                    <form class="add-staff-form">
+                        <div class="form-group">
+                            <label for="staffName">Staff Name:</label>
+                            <input type="text" id="staffName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="staffEmail">Email:</label>
+                            <input type="email" id="staffEmail" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="staffPhone">Phone:</label>
+                            <input type="tel" id="staffPhone" name="phone" placeholder="e.g., +1234567890">
+                        </div>
+                        <div class="form-group">
+                            <label for="staffPosition">Position:</label>
+                            <input type="text" id="staffPosition" name="position" placeholder="e.g., Manager, Developer">
+                        </div>
+                        <div class="form-group">
+                            <label for="staffDateOfJoining">Date of Joining:</label>
+                            <input type="date" id="staffDateOfJoining" name="dateOfJoining" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="staffBaseSalary">Base Salary (INR):</label>
+                            <input type="number" id="staffBaseSalary" name="baseSalary" min="0" step="0.01" required>
+                        </div>
+                        <button type="submit" class="submit-btn"><i class="fas fa-plus-circle"></i> Add Staff</button>
+                        <button type="button" class="action-btn cancel-btn cancel-staff-add"><i class="fas fa-times-circle"></i> Cancel</button>
+                    </form>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const addNewStaffBtn = document.querySelector('.add-new-staff-btn');
+            const addStaffSection = document.querySelector('.add-staff-section');
+            const staffListSection = document.querySelector('.staff-list-section');
+            const cancelStaffAddBtn = document.querySelector('.cancel-staff-add');
+            const addStaffForm = document.querySelector('.add-staff-form');
+
+            // Show add staff form
+            addNewStaffBtn.addEventListener('click', () => {
+                staffListSection.style.display = 'none';
+                addStaffSection.style.display = 'block';
+                addStaffForm.reset();
+            });
+
+            // Hide add staff form and show list
+            cancelStaffAddBtn.addEventListener('click', () => {
+                addStaffSection.style.display = 'none';
+                staffListSection.style.display = 'block';
+            });
+
+            // Handle Add Staff Form Submission
+            addStaffForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const formData = new FormData(addStaffForm);
+                const data = Object.fromEntries(formData.entries());
+
+                // Convert baseSalary to number
+                data.baseSalary = parseFloat(data.baseSalary);
+
+                try {
+                    const response = await fetch('/admin/api/staff', { // Assuming this is your API endpoint for adding staff
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        alert(result.message);
+                        window.location.reload(); // Reload to see the new staff in the list
+                    } else {
+                        alert('Error: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error adding staff:', error);
+                    alert('An unexpected error occurred. Please try again.');
+                }
+            });
+
+            // Placeholder for Edit/Delete functionality (client-side)
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const staffId = e.currentTarget.dataset.id;
+                    alert(`Edit staff member with ID: ${staffId}`);
+                    // Implement actual edit logic here (e.g., redirect to an edit form)
+                });
+            });
+
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const staffId = e.currentTarget.dataset.id;
+                    if (confirm(`Are you sure you want to delete staff member with ID: ${staffId}?`)) {
+                        try {
+                            const response = await fetch(`/admin/api/staff/${staffId}`, { // Assuming API endpoint for deleting staff
+                                method: 'DELETE'
+                            });
+                            const result = await response.json();
+                            if (result.success) {
+                                alert(result.message);
+                                window.location.reload(); // Reload to update the list
+                            } else {
+                                alert('Error: ' + result.message);
+                            }
+                        } catch (error) {
+                            console.error('Error deleting staff:', error);
+                            alert('An unexpected error occurred during deletion.');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+

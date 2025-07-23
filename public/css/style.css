@@ -1,0 +1,688 @@
+
+        /* Specific styles for this page, if needed, or rely on global styles */
+        .salary-list-section {
+            background-color: #1e1e2f;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 1200px;
+            margin: 2rem auto;
+            color: #e0e0e0;
+        }
+
+        .salary-list-section h2 {
+            color: #00bcd4;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .table-container {
+            overflow-x: auto; /* Ensures table is scrollable on small screens */
+            margin-top: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #3a3a50;
+            color: #e0e0e0;
+        }
+
+        th {
+            background-color: #2a2a40;
+            font-weight: bold;
+            color: #00bcd4;
+        }
+
+        tr:hover {
+            background-color: #2a2a40;
+        }
+
+        .action-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-right: 5px;
+            text-decoration: none; /* For anchor tags styled as buttons */
+        }
+
+        .action-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .edit-btn { background-color: #ffc107; color: #333; }
+        .edit-btn:hover { background-color: #e0a800; }
+        .delete-btn { background-color: #dc3545; }
+        .delete-btn:hover { background-color: #c82333; }
+
+        .add-salary-btn-container {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .add-salary-btn {
+            background-color: #28a745; /* Green for add */
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .add-salary-btn:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+
+
+
+
+    /* for staff management page  */
+
+       /* Specific styles for this page */
+       .staff-list-section {
+        background-color: #1e1e2f;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        max-width: 1000px;
+        margin: 2rem auto;
+        color: #e0e0e0;
+    }
+
+    .staff-list-section h2 {
+        color: #00bcd4;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .table-container {
+        overflow-x: auto; /* Ensures table is scrollable on small screens */
+        margin-top: 1.5rem;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1rem;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #3a3a50;
+        color: #e0e0e0;
+    }
+
+    th {
+        background-color: #2a2a40;
+        font-weight: bold;
+        color: #00bcd4;
+    }
+
+    tr:hover {
+        background-color: #2a2a40;
+    }
+
+    .action-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background-color 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        margin-right: 5px;
+        text-decoration: none; /* For anchor tags styled as buttons */
+    }
+
+    .action-btn:hover {
+        background-color: #0056b3;
+    }
+
+    .edit-btn { background-color: #ffc107; color: #333; }
+    .edit-btn:hover { background-color: #e0a800; }
+    .delete-btn { background-color: #dc3545; }
+    .delete-btn:hover { background-color: #c82333; }
+
+    .add-staff-btn-container {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .add-staff-btn {
+        background-color: #28a745; /* Green for add */
+        color: white;
+        padding: 12px 25px;
+        border-radius: 5px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+    }
+
+    .add-staff-btn:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+    }
+
+    /* Add Staff Form */
+    .add-staff-section {
+        background-color: #1e1e2f;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        max-width: 600px;
+        margin: 2rem auto;
+        color: #e0e0e0;
+    }
+
+    .add-staff-section h2 {
+        color: #00bcd4;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .add-staff-form {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        color: #ccc;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="tel"],
+    .form-group input[type="number"],
+    .form-group input[type="date"] {
+        padding: 10px;
+        border: 1px solid #3a3a50;
+        border-radius: 5px;
+        background-color: #2a2a40;
+        color: #ffffff;
+        font-size: 1rem;
+    }
+
+    .form-group input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+    }
+
+    .submit-btn, .cancel-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 1rem;
+    }
+
+    .submit-btn {
+        background-color: #00bcd4;
+        color: #1e1e2f;
+    }
+
+    .submit-btn:hover {
+        background-color: #00a8b8;
+        transform: translateY(-2px);
+    }
+
+    .cancel-btn {
+        background-color: #dc3545;
+        color: #ffffff;
+    }
+
+    .cancel-btn:hover {
+        background-color: #c82333;
+        transform: translateY(-2px);
+    }
+
+    @media (min-width: 768px) {
+        .add-staff-form {
+            grid-template-columns: 1fr 1fr;
+        }
+        .add-staff-form .submit-btn,
+        .add-staff-form .cancel-btn {
+            grid-column: span 2;
+            justify-self: center;
+        }
+    }
+
+
+
+
+    /* for staff hours page  */
+
+    .staff-hours-section {
+        background-color: #1e1e2f;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        max-width: 900px;
+        margin: 2rem auto;
+        color: #e0e0e0;
+    }
+
+    .staff-hours-section h2 {
+        color: #00bcd4;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .staff-table-container {
+        overflow-x: auto;
+        margin-top: 1.5rem;
+    }
+
+    .staff-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1rem;
+    }
+
+    .staff-table th, .staff-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #3a3a50;
+        color: #e0e0e0;
+    }
+
+    .staff-table th {
+        background-color: #2a2a40;
+        font-weight: bold;
+        color: #00bcd4;
+    }
+
+    .staff-table tr:hover {
+        background-color: #2a2a40;
+    }
+
+    .hours-input {
+        width: 80px;
+        padding: 8px;
+        border: 1px solid #3a3a50;
+        border-radius: 5px;
+        background-color: #2a2a40;
+        color: #ffffff;
+        font-size: 0.9rem;
+    }
+
+    .update-hours-btn {
+        background-color: #00bcd4;
+        color: #1e1e2f;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background-color 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .update-hours-btn:hover {
+        background-color: #00a8b8;
+    }
+
+    .no-staff-message {
+        text-align: center;
+        padding: 20px;
+        color: #aaa;
+    }
+
+
+    
+
+    /* for generate payslip page  */
+
+            /* General styles from your theme */
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #1a1a2e; /* Dark background */
+                color: #e0e0e0; /* Light text */
+                margin: 0;
+                padding: 0;
+            }
+    
+            .wrapper {
+                display: flex;
+                min-height: 100vh;
+            }
+    
+            /* Assuming a simple header for now */
+            .admin-header {
+                background-color: #2a2a40;
+                color: #00bcd4;
+                padding: 1.5rem 2rem;
+                font-size: 1.8rem;
+                font-weight: bold;
+                text-align: center;
+                border-bottom: 1px solid #3a3a50;
+            }
+    
+            .content {
+                flex-grow: 1;
+                padding: 20px;
+            }
+    
+            /* Main section styling */
+            .payslip-section {
+                background-color: #1e1e2f;
+                padding: 2rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                max-width: 900px;
+                margin: 2rem auto;
+                color: #e0e0e0;
+            }
+    
+            .payslip-section h2 {
+                color: #00bcd4;
+                text-align: center;
+                margin-bottom: 1.5rem;
+            }
+    
+            .payslip-form {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1.5rem;
+                margin-bottom: 2rem;
+                padding-bottom: 1.5rem;
+                border-bottom: 1px solid #3a3a50;
+            }
+    
+            .form-group {
+                display: flex;
+                flex-direction: column;
+            }
+    
+            .form-group label {
+                margin-bottom: 0.5rem;
+                font-weight: bold;
+                color: #ccc;
+            }
+    
+            .form-group select,
+            .form-group input[type="month"] {
+                padding: 10px;
+                border: 1px solid #3a3a50;
+                border-radius: 5px;
+                background-color: #2a2a40;
+                color: #ffffff;
+                font-size: 1rem;
+            }
+    
+            .form-group input[type="month"]::-webkit-calendar-picker-indicator {
+                filter: invert(1);
+            }
+    
+            .submit-btn {
+                background-color: #00bcd4;
+                color: #1e1e2f;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 1rem;
+                font-weight: bold;
+                transition: background-color 0.3s ease;
+                grid-column: span 2; /* Make it span both columns */
+                margin-top: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+    
+            .submit-btn:hover {
+                background-color: #00a8b8;
+            }
+    
+            .payslip-list-container {
+                margin-top: 2rem;
+            }
+    
+            .payslip-list-container h3 {
+                color: #00bcd4;
+                margin-bottom: 1rem;
+                border-bottom: 1px solid #3a3a50;
+                padding-bottom: 0.5rem;
+            }
+    
+            .payslip-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+    
+            .payslip-table th, .payslip-table td {
+                padding: 12px 15px;
+                text-align: left;
+                border-bottom: 1px solid #3a3a50;
+                color: #e0e0e0;
+            }
+    
+            .payslip-table th {
+                background-color: #2a2a40;
+                font-weight: bold;
+                color: #00bcd4;
+            }
+    
+            .payslip-table tr:hover {
+                background-color: #2a2a40;
+            }
+    
+            .action-btn {
+                background-color: #007bff;
+                color: white;
+                border: none;
+                padding: 8px 12px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 0.9rem;
+                transition: background-color 0.3s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                margin-right: 5px;
+            }
+    
+            .action-btn:hover {
+                background-color: #0056b3;
+            }
+    
+            .no-payslips-message {
+                text-align: center;
+                padding: 20px;
+                color: #aaa;
+            }
+    
+            /* Modal Styles */
+            .modal {
+                display: none; /* Hidden by default */
+                position: fixed; /* Stay in place */
+                z-index: 1000; /* Sit on top */
+                left: 0;
+                top: 0;
+                width: 100%; /* Full width */
+                height: 100%; /* Full height */
+                overflow: auto; /* Enable scroll if needed */
+                background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+                justify-content: center;
+                align-items: center;
+            }
+    
+            .modal-content {
+                background-color: #2a2a40;
+                margin: auto;
+                padding: 30px;
+                border: 1px solid #3a3a50;
+                border-radius: 8px;
+                width: 80%;
+                max-width: 500px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+                text-align: center;
+                position: relative;
+            }
+    
+            .modal-content h3 {
+                color: #00bcd4;
+                margin-top: 0;
+                margin-bottom: 15px;
+                border-bottom: none; /* Override default h3 border */
+                padding-bottom: 0;
+            }
+    
+            .modal-content p {
+                margin-bottom: 20px;
+                color: #e0e0e0;
+            }
+    
+            .modal-buttons {
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+            }
+    
+            .modal-buttons button {
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+                transition: background-color 0.3s ease;
+            }
+    
+            .modal-ok-btn {
+                background-color: #00bcd4;
+                color: #1e1e2f;
+            }
+            .modal-ok-btn:hover {
+                background-color: #00a8b8;
+            }
+    
+            .modal-cancel-btn {
+                background-color: #6c757d;
+                color: white;
+            }
+            .modal-cancel-btn:hover {
+                background-color: #5a6268;
+            }
+    
+            .modal-confirm-btn {
+                background-color: #dc3545; /* Red for confirm delete */
+                color: white;
+            }
+            .modal-confirm-btn:hover {
+                background-color: #c82333;
+            }
+
+
+
+
+            /* for dashboard */
+
+                    /* Specific styles for the dashboard */
+        .dashboard-section {
+            background-color: #1e1e2f;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 1000px;
+            margin: 2rem auto;
+            color: #e0e0e0;
+            text-align: center;
+        }
+
+        .dashboard-section h2 {
+            color: #00bcd4;
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background-color: #2a2a40;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none; /* For anchor tags */
+            color: inherit; /* Inherit text color */
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 188, 212, 0.3);
+        }
+
+        .card i {
+            font-size: 3rem;
+            color: #00bcd4;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            color: #e0e0e0;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            font-size: 1rem;
+            color: #aaa;
+        }
+ 

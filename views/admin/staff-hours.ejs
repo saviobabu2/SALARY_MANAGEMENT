@@ -1,0 +1,113 @@
+
+
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <header class="admin-header">
+                Staff Hours Management
+            </header>
+
+            <main>
+                <section class="staff-hours-section">
+                    <h2>Update Daily Working Hours</h2>
+                    <div class="staff-table-container">
+                        <table class="staff-table">
+                            <thead>
+                                <tr>
+                                    <th>Staff Name</th>
+                                    <th>Position</th>
+                                    <th>Current Month Hours (<%= currentMonthYear %>)</th>
+                                    <th>Add Hours Today</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (staffList && staffList.length > 0) { %>
+                                    <% staffList.forEach(function(staff) { %>
+                                        <tr data-staff-id="<%= staff._id %>">
+                                            <td><%= staff.name %></td>
+                                            <td><%= staff.position %></td>
+                                            <td><%= staff.monthlyHours.totalHoursWorked.toFixed(2) %></td>
+                                            <td>
+                                                <input type="number" step="0.01" min="0" class="hours-input" id="hours_<%= staff._id %>" placeholder="e.g., 8.5">
+                                            </td>
+                                            <td>
+                                                <button class="update-hours-btn" data-id="<%= staff._id %>">
+                                                    <i class="fas fa-clock"></i> Update Hours
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="5" class="no-staff-message">No staff members found.</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+   
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.update-hours-btn').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const staffId = e.currentTarget.dataset.id;
+                    const hoursInput = document.getElementById(`hours_${staffId}`);
+                    const hoursToAdd = parseFloat(hoursInput.value);
+
+                    if (isNaN(hoursToAdd) || hoursToAdd <= 0) {
+                        alert('Please enter a valid positive number for hours.');
+                        return;
+                    }
+           
+                    try {
+                        const response = await fetch(`/admin/api/staff/${staffId}/update-hours`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ hoursToAdd: hoursToAdd })
+                        });
+
+                        // Check if the HTTP response status is OK (200-299)
+                        if (!response.ok) {
+                            // If response is not OK, it's an error from the server.
+                            // Attempt to parse the error message from the JSON body.
+                            const errorData = await response.json();
+                            // Throw an error to be caught by the outer catch block
+                            throw new Error(errorData.message || 'Server responded with an error.');
+                        }
+
+                        // If response.ok is true, parse the successful JSON result
+                        const result = await response.json();
+
+                        // Now, 'result.success' will truly reflect the server's business logic success
+                        if (result.success) {
+                            alert(result.message);
+                            // Update the displayed hours without a full page reload
+                            const row = e.currentTarget.closest('tr');
+                            // Ensure the index [2] is correct for totalHoursWorked column
+                            row.children[2].textContent = result.newTotalHours.toFixed(2);
+                            hoursInput.value = ''; // Clear input field
+                        } else {
+                            // This block handles cases where server sends 200 OK but 'success: false'
+                            // (less common with well-structured APIs, but good for robustness)
+                            alert('Error: ' + result.message);
+                        }
+                    } catch (error) {
+                        // This catch block will now receive errors from network issues OR
+                        // errors explicitly thrown by our 'if (!response.ok)' check.
+                        console.error('Error updating staff hours:', error);
+                        alert('An unexpected error occurred: ' + error.message);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
