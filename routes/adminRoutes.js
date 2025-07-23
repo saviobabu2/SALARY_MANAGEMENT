@@ -5,7 +5,7 @@ const adminController = require('../controllers/adminController'); // Import you
 
 
 // --- Admin Panel Core Routes ---
-router.get('/dashboard', adminController.dashboard);
+router.get('/', adminController.dashboard);
 
 // --- Staff Management Routes ---
 router.get('/staff-management', adminController.staffManager); // Page to list/manage staff
