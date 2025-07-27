@@ -107,49 +107,59 @@ const renderStaffHoursPage = async (req, res) => {
 
 // Handles updating staff daily working hours via API (POST /admin/api/staff/:staffId/update-hours)
 const updateStaffDailyHours = async (req, res) => {
-    try {
-        const { staffId } = req.params; // Get staff ID from URL parameters
-        const { hoursToAdd } = req.body; // Get hours to add from request body
+    console.log("ippo kanalo"); // This should appear in your server console now
+    console.log('Request body:', req.body);
+    console.log('Request params:', req.params);
 
-        // Validate input: hoursToAdd must be a positive number
+    try {
+        const { staffId } = req.params;
+        let { hoursToAdd } = req.body;
+
+        hoursToAdd = parseFloat(hoursToAdd);
+
         if (isNaN(hoursToAdd) || hoursToAdd <= 0) {
             return res.status(400).json({ success: false, message: 'Invalid hours provided. Must be a positive number.' });
         }
 
-        const staff = await Staff.findById(staffId); // Find the staff member
+        const staff = await Staff.findById(staffId);
 
         if (!staff) {
             return res.status(404).json({ success: false, message: 'Staff member not found.' });
         }
 
         const today = new Date();
-        const currentMonthYear = today.toISOString().slice(0, 7); // Get current YYYY-MM
+        const currentMonthYear = today.toISOString().slice(0, 7);
 
-        // Check if the month has changed since the last update for this staff member.
-        // If it's a new month, reset totalHoursWorked for the new month.
         if (staff.monthlyHours.monthYear !== currentMonthYear) {
             staff.monthlyHours.monthYear = currentMonthYear;
-            staff.monthlyHours.totalHoursWorked = 0; // Reset to 0 for the new month
+            staff.monthlyHours.totalHoursWorked = 0;
         }
 
-        staff.monthlyHours.totalHoursWorked += hoursToAdd; // Accumulate hours
-        staff.monthlyHours.lastDailyUpdate = today; // Update the timestamp of the last update
+        staff.monthlyHours.totalHoursWorked += hoursToAdd;
+        staff.monthlyHours.lastDailyUpdate = today;
 
-        await staff.save(); // Save the updated staff document
+        await staff.save();
 
-        res.status(200).json({
+        // This JSON response is correct and will be caught by the frontend fetch
+        return res.status(200).json({
             success: true,
             message: `Hours updated successfully for ${staff.name}.`,
-            newTotalHours: staff.monthlyHours.totalHoursWorked // Return the new total hours
+            newTotalHours: staff.monthlyHours.totalHoursWorked // Still good to send, though not used for display on reload
         });
 
     } catch (error) {
         console.error('Error updating staff daily hours:', error);
-        res.status(500).json({ success: false, message: 'Server error while updating staff hours.', error: error.message });
+
+        const errorMessage = process.env.NODE_ENV === 'production'
+            ? 'An unexpected server error occurred while updating staff hours.'
+            : `Server error while updating staff hours: ${error.message}`;
+
+        return res.status(500).json({
+            success: false,
+            message: errorMessage
+        });
     }
 };
-
-
 
 
 

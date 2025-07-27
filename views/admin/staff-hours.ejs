@@ -1,5 +1,3 @@
-
-
 <body>
     <div class="wrapper">
         <div class="content">
@@ -51,27 +49,41 @@
         </div>
     </div>
 
-   
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.update-hours-btn').forEach(button => {
                 button.addEventListener('click', async (e) => {
                     const staffId = e.currentTarget.dataset.id;
                     const hoursInput = document.getElementById(`hours_${staffId}`);
-                    const hoursToAdd = parseFloat(hoursInput.value);
+                    // Use .value.trim() to remove leading/trailing whitespace
+                    const inputValue = hoursInput.value.trim();
+                    const hoursToAdd = parseFloat(inputValue);
 
-                    if (isNaN(hoursToAdd) || hoursToAdd <= 0) {
-                        alert('Please enter a valid positive number for hours.');
+                    // Refined frontend validation messages
+                    if (inputValue === '') { // Check for empty string specifically
+                        alert('Please enter hours to add.');
+                        hoursInput.focus(); // Keep focus on the input
                         return;
                     }
-           
+                    if (isNaN(hoursToAdd) || hoursToAdd <= 0) { // Check for invalid number or non-positive
+                        alert('Please enter a valid positive number for hours (e.g., 8.5).');
+                        hoursInput.value = ''; // Clear input on error
+                        hoursInput.focus();
+                        return;
+                    }
+
                     try {
-                        const response = await fetch(`/admin/api/staff/${staffId}/update-hours`, {
+                        // **** THE KEY CHANGE IS HERE ****
+                        // Changed from `/admin/api/staff/...` to `/admin/staff/...`
+                        // because `app.use('/admin', adminRoutes);` handles the /admin part.
+                        const response = await fetch(`/admin/staff/${staffId}/update-hours`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
+                                // If you are using CSRF tokens, ensure they are sent here.
+                                // E.g., 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                             },
-                            body: JSON.stringify({ hoursToAdd: hoursToAdd })
+                            body: JSON.stringify({ hoursToAdd: hoursToAdd }) // hoursToAdd is correctly a number here
                         });
 
                         // Check if the HTTP response status is OK (200-299)
@@ -80,27 +92,29 @@
                             // Attempt to parse the error message from the JSON body.
                             const errorData = await response.json();
                             // Throw an error to be caught by the outer catch block
-                            throw new Error(errorData.message || 'Server responded with an error.');
+                            // Prioritize backend message, fall back to generic HTTP status text
+                            throw new Error(errorData.message || response.statusText || 'Server responded with an error.');
                         }
 
                         // If response.ok is true, parse the successful JSON result
                         const result = await response.json();
 
-                        // Now, 'result.success' will truly reflect the server's business logic success
+                        // 'result.success' reflects the server's business logic success
                         if (result.success) {
                             alert(result.message);
                             // Update the displayed hours without a full page reload
                             const row = e.currentTarget.closest('tr');
                             // Ensure the index [2] is correct for totalHoursWorked column
-                            row.children[2].textContent = result.newTotalHours.toFixed(2);
+                            if (row && row.children[2]) {
+                                row.children[2].textContent = result.newTotalHours.toFixed(2);
+                            }
                             hoursInput.value = ''; // Clear input field
                         } else {
                             // This block handles cases where server sends 200 OK but 'success: false'
-                            // (less common with well-structured APIs, but good for robustness)
-                            alert('Error: ' + result.message);
+                            alert('Error: ' + (result.message || 'An unknown error occurred during update.'));
                         }
                     } catch (error) {
-                        // This catch block will now receive errors from network issues OR
+                        // This catch block will now receive network errors OR
                         // errors explicitly thrown by our 'if (!response.ok)' check.
                         console.error('Error updating staff hours:', error);
                         alert('An unexpected error occurred: ' + error.message);
@@ -110,4 +124,3 @@
         });
     </script>
 </body>
-
